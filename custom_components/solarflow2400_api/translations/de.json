@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "SolarFlow2400-API",
-        "description": "Gib die lokale IP-Adresse deines SolarFlow-Geräts ein. Die lokale HTTP-API muss zuvor aktiviert werden (in der Zendure-App ein HEMS hinzufügen und wieder entfernen).",
+        "description": "Gib die lokale IP-Adresse deines SolarFlow-Geräts ein. Die lokale HTTP-API muss zuvor aktiviert worden sein (in der Zendure-App ein HEMS hinzufügen und anschließend wieder entfernen).",
         "data": {
           "host": "IP-Adresse"
         }
@@ -15,13 +15,13 @@
       }
     },
     "error": {
-      "cannot_connect": "Gerät unter dieser Adresse nicht erreichbar. Prüfe die IP und ob die lokale API aktiviert ist.",
-      "no_serial": "Das Gerät hat geantwortet, aber keine Seriennummer ('sn') gemeldet."
+      "cannot_connect": "Das Gerät ist unter dieser Adresse nicht erreichbar. Prüfe die IP-Adresse und ob die lokale API aktiviert ist.",
+      "no_serial": "Das Gerät antwortet, meldet aber keine Seriennummer ('sn')."
     },
     "abort": {
-      "already_configured": "Dieses Gerät ist bereits eingerichtet.",
-      "cannot_connect": "Gerät nicht erreichbar.",
-      "no_serial": "Das Gerät hat keine Seriennummer ('sn') gemeldet."
+      "already_configured": "Dieses Gerät ist bereits konfiguriert.",
+      "cannot_connect": "Das Gerät ist nicht erreichbar.",
+      "no_serial": "Das Gerät meldet keine Seriennummer ('sn')."
     }
   },
   "options": {
