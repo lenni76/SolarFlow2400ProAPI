@@ -29,6 +29,9 @@ PARALLEL_UPDATES = 1
 class ZendureNumberEntityDescription(NumberEntityDescription):
     """Description for a writable numeric property."""
 
+    read_scale: float = 1.0
+    write_scale: float = 1.0
+
 
 NUMBERS: tuple[ZendureNumberEntityDescription, ...] = (
     ZendureNumberEntityDescription(
@@ -67,6 +70,8 @@ NUMBERS: tuple[ZendureNumberEntityDescription, ...] = (
         native_max_value=100,
         native_step=1,
         mode=NumberMode.SLIDER,
+        read_scale=0.1,
+        write_scale=10.0,
     ),
     ZendureNumberEntityDescription(
         key="minSoc",  # RW, % 0-50 (verified).
@@ -76,6 +81,8 @@ NUMBERS: tuple[ZendureNumberEntityDescription, ...] = (
         native_max_value=50,
         native_step=1,
         mode=NumberMode.SLIDER,
+        read_scale=0.1,
+        write_scale=10.0,
     ),
     ZendureNumberEntityDescription(
         key="batCalTime",  # RW, minutes. "Unauthorized modifications not recommended."
@@ -123,10 +130,15 @@ class ZendureNumber(ZendureDeviceEntity, NumberEntity):
         """Return the current value reported by the device."""
         raw = self.native_property_value
         try:
-            return float(raw) if raw is not None else None
+            return (
+                float(raw) * self.entity_description.read_scale
+                if raw is not None
+                else None
+            )
         except (TypeError, ValueError):
             return None
 
     async def async_set_native_value(self, value: float) -> None:
         """Write the new value to the device (integer, per zenSDK)."""
-        await self.coordinator.async_write_property(self._key, int(value))
+        raw_value = round(value * self.entity_description.write_scale)
+        await self.coordinator.async_write_property(self._key, raw_value)

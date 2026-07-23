@@ -86,12 +86,10 @@ Entities are only created for properties your specific device actually reports, 
 
 ## Important notes on the data (verified)
 
-- **`socSet` / `minSoc` are plain percentages, not tenths.** The Zendure property
-  documentation lists `socSet` with unit **%** and range **70–100**, and `minSoc` with
-  unit **%** and range **0–50**. This integration therefore reads and writes them as
-  plain integers. The original Symcon script divided/multiplied these by 10 — that
-  scaling is **not** supported by the official documentation, so it was intentionally
-  dropped. If your firmware genuinely reports tenths, open an issue.
+- **`socSet` / `minSoc` are transported by the tested firmware in tenths of a
+  percent.** The integration converts reported API values such as `930` and `110` to
+  **93 %** and **11 %** in Home Assistant. Values written from Home Assistant are
+  multiplied by 10 before being sent back to the device.
 - **`BatVolt`, `maxVol`, `minVol`** are reported in **0.01 V** and are scaled to volts.
   **`maxTemp`** is reported in **0.1 Kelvin** and converted to °C via `(raw − 2731) / 10`.
   All of these conversions are documented in the zenSDK property reference.

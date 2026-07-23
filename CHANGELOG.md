@@ -1,16 +1,18 @@
 # Changelog
 
-## 1.1.1
-
-- Fix Home Assistant startup failure by importing `DeviceInfo` from `homeassistant.helpers.device_registry`.
-- Validate Python syntax and JSON metadata for the complete integration package.
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [1.1.1] - 2026-07-23
+
+### Fixed
+
+- Scale `socSet` and `minSoc` from API tenths of a percent for display.
+- Convert percentage values back to API tenths when writing.
 
 ### Added
 
@@ -35,5 +37,6 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - API response cleanup and invalid JSON handling.
 - Serialized write operations and coordinator error handling.
 
-[Unreleased]: https://github.com/lenni76/SolarFlow2400-API/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/lenni76/SolarFlow2400-API/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/lenni76/SolarFlow2400-API/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/lenni76/SolarFlow2400-API/releases/tag/v1.1.0

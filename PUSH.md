@@ -16,6 +16,6 @@
 - Run `ruff check .`.
 - Run `ruff format --check .`.
 - Push and verify that HACS, hassfest, and Ruff workflows pass.
-- Create a GitHub release whose tag matches the manifest version, for example `v1.1.0`.
+- Create a GitHub release whose tag matches the manifest version, for example `v1.1.1`.
 - Add release notes or use GitHub's generated release notes.
 - Test installation or update through HACS.
