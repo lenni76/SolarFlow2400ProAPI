@@ -1,0 +1,37 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "SolarFlow2400-API",
+        "description": "Enter the local IP address of your SolarFlow device. The local HTTP API must be enabled first (add a HEMS in the Zendure app, then remove it again).",
+        "data": {
+          "host": "IP address"
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "SolarFlow2400-API",
+        "description": "Do you want to add {model} ({serial}) at {host}?"
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the device at that address. Check the IP and that the local API is enabled.",
+      "no_serial": "The device answered but did not report a serial number ('sn')."
+    },
+    "abort": {
+      "already_configured": "This device is already configured.",
+      "cannot_connect": "Could not reach the device.",
+      "no_serial": "The device did not report a serial number ('sn')."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "data": {
+          "scan_interval": "Polling interval (seconds)"
+        }
+      }
+    }
+  }
+}

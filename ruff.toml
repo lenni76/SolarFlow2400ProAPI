@@ -1,0 +1,17 @@
+target-version = "py313"
+line-length = 88
+src = ["custom_components"]
+
+[lint]
+select = [
+  "B",
+  "E",
+  "F",
+  "I",
+  "UP",
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
