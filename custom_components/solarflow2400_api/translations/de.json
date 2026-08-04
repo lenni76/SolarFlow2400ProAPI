@@ -29,7 +29,11 @@
       "init": {
         "title": "Optionen",
         "data": {
-          "scan_interval": "Abfrageintervall (Sekunden)"
+          "scan_interval": "Abfrageintervall (Sekunden)",
+          "command_validation": "Gesendete Befehle überprüfen",
+          "validation_delay": "Verzögerung bis zur Prüfung (Sekunden)",
+          "auto_recovery": "Einmalige automatische Recovery",
+          "recovery_cooldown": "Recovery-Sperrzeit (Sekunden)"
         }
       }
     }

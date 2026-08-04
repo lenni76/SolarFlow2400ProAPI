@@ -29,10 +29,18 @@ CONF_HOST = "host"
 CONF_SERIAL = "serial"
 CONF_MODEL = "model"
 CONF_SCAN_INTERVAL = "scan_interval"
+CONF_COMMAND_VALIDATION = "command_validation"
+CONF_AUTO_RECOVERY = "auto_recovery"
+CONF_VALIDATION_DELAY = "validation_delay"
+CONF_RECOVERY_COOLDOWN = "recovery_cooldown"
 
 # zenSDK does not mandate a poll rate. The reference Symcon script used 10 s.
 # We default to 30 s to be gentle on the device and make it user-configurable.
 DEFAULT_SCAN_INTERVAL = 30
+DEFAULT_COMMAND_VALIDATION = True
+DEFAULT_AUTO_RECOVERY = False
+DEFAULT_VALIDATION_DELAY = 2
+DEFAULT_RECOVERY_COOLDOWN = 300
 MIN_SCAN_INTERVAL = 5
 MAX_SCAN_INTERVAL = 3600
 

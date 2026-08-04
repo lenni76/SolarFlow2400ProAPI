@@ -20,10 +20,18 @@ from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo
 
 from .api import ZendureApiError, ZendureLocalApi
 from .const import (
+    CONF_AUTO_RECOVERY,
+    CONF_COMMAND_VALIDATION,
     CONF_MODEL,
+    CONF_RECOVERY_COOLDOWN,
     CONF_SCAN_INTERVAL,
     CONF_SERIAL,
+    CONF_VALIDATION_DELAY,
+    DEFAULT_AUTO_RECOVERY,
+    DEFAULT_COMMAND_VALIDATION,
+    DEFAULT_RECOVERY_COOLDOWN,
     DEFAULT_SCAN_INTERVAL,
+    DEFAULT_VALIDATION_DELAY,
     DOMAIN,
     MAX_SCAN_INTERVAL,
     MIN_SCAN_INTERVAL,
@@ -179,12 +187,34 @@ class ZendureOptionsFlow(OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_SCAN_INTERVAL, default=current
-                    ): vol.All(
+                    vol.Required(CONF_SCAN_INTERVAL, default=current): vol.All(
                         vol.Coerce(int),
                         vol.Range(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL),
-                    )
+                    ),
+                    vol.Required(
+                        CONF_COMMAND_VALIDATION,
+                        default=self.config_entry.options.get(
+                            CONF_COMMAND_VALIDATION, DEFAULT_COMMAND_VALIDATION
+                        ),
+                    ): bool,
+                    vol.Required(
+                        CONF_VALIDATION_DELAY,
+                        default=self.config_entry.options.get(
+                            CONF_VALIDATION_DELAY, DEFAULT_VALIDATION_DELAY
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1, max=30)),
+                    vol.Required(
+                        CONF_AUTO_RECOVERY,
+                        default=self.config_entry.options.get(
+                            CONF_AUTO_RECOVERY, DEFAULT_AUTO_RECOVERY
+                        ),
+                    ): bool,
+                    vol.Required(
+                        CONF_RECOVERY_COOLDOWN,
+                        default=self.config_entry.options.get(
+                            CONF_RECOVERY_COOLDOWN, DEFAULT_RECOVERY_COOLDOWN
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=60, max=86400)),
                 }
             ),
         )

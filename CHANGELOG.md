@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+- Dynamische Begrenzung von `outputLimit` und `inputLimit` anhand aktuell gemeldeter Gerätelimits.
+- Optionale Validierung jedes Schreibbefehls mit einmaliger Wiederholung.
+- Konfigurierbare, einmalige Recovery mit Sperrzeit; standardmäßig deaktiviert.
+- Neue Diagnoseentitäten für Status, Gesamtzustand und letzten Steuerbefehl.
+- Erkennung des beobachtbaren Zustands „100 % erreicht, keine Entladung“.
+- Rohwerte unbekannter oder nicht eindeutig dokumentierter Gerätezustände werden unverändert ausgegeben.
+- Ereignisverlauf und Befehlsdetails als Diagnoseattribute.
+
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),

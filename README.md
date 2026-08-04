@@ -143,3 +143,16 @@ default here. Use at your own risk.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+
+## Diagnose und Befehlssicherheit (ab Version 1.2.0)
+
+Die Integration kann Schreibbefehle nach einer konfigurierbaren Verzögerung anhand der vom Gerät zurückgemeldeten Eigenschaft prüfen. Bei einer Abweichung wird der Befehl genau einmal wiederholt. Eine optionale Recovery kann anschließend einmalig den dokumentierten Rohwert von `acMode` wechseln und zurücksetzen; sie ist standardmäßig deaktiviert und durch eine Sperrzeit geschützt.
+
+Neue Diagnoseentitäten:
+
+- **Zendure Status** – verständlicher, aus beobachtbaren Daten abgeleiteter Integrationsstatus.
+- **Zendure Zustand** – kompakte Bewertung (`OK`, `Eingeschränkter Betrieb`, `Fehler`).
+- **Letzter Steuerbefehl** – Soll-, Sende- und Rückmeldewerte sowie Zeitpunkte.
+
+Wichtig: Nicht eindeutig dokumentierte Geräte-Rohwerte werden niemals interpretiert. Sie bleiben als Rohwert sichtbar.

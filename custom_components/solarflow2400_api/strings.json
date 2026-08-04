@@ -29,7 +29,11 @@
       "init": {
         "title": "Options",
         "data": {
-          "scan_interval": "Polling interval (seconds)"
+          "scan_interval": "Polling interval (seconds)",
+          "command_validation": "Validate written commands",
+          "validation_delay": "Validation delay (seconds)",
+          "auto_recovery": "Automatic one-time recovery",
+          "recovery_cooldown": "Recovery cooldown (seconds)"
         }
       }
     }

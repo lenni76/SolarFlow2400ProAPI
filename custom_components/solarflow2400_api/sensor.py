@@ -238,7 +238,11 @@ async def async_setup_entry(
 ) -> None:
     """Set up Zendure sensors."""
     coordinator = entry.runtime_data
-    entities: list[SensorEntity] = []
+    entities: list[SensorEntity] = [
+        ZendureStatusSensor(coordinator),
+        ZendureHealthSensor(coordinator),
+        ZendureCommandSensor(coordinator),
+    ]
 
     # Known device sensors.
     for description in DEVICE_SENSORS:
@@ -339,3 +343,98 @@ def _apply(description: ZendureSensorEntityDescription, raw: Any) -> Any:
         except (TypeError, ValueError):
             return None
     return raw
+
+
+class ZendureStatusSensor(ZendureDeviceEntity, SensorEntity):
+    """Human-readable derived integration status; no raw enum interpretation."""
+
+    _attr_name = "Zendure Status"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_icon = "mdi:information-outline"
+
+    def __init__(self, coordinator: ZendureCoordinator) -> None:
+        super().__init__(coordinator, "zendure_status")
+
+    @property
+    def native_value(self) -> str:
+        return self.coordinator.diagnostics.status
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        d = self.coordinator.diagnostics
+        return {
+            "letzter_befehl": d.last_command,
+            "angeforderter_wert": d.last_requested_value,
+            "gesendeter_wert": d.last_sent_value,
+            "gemeldeter_wert": d.last_reported_value,
+            "befehl_erfolgreich": d.command_success,
+            "wiederholungen": d.retry_count,
+            "verwendetes_geraetelimit": d.limit_used,
+            "recovery_aktiv": d.recovery_active,
+            "letzte_ereignisse": list(d.events),
+        }
+
+    @property
+    def available(self) -> bool:
+        return self.coordinator.last_update_success
+
+
+class ZendureHealthSensor(ZendureDeviceEntity, SensorEntity):
+    """Condensed health assessment based on integration-observed outcomes."""
+
+    _attr_name = "Zendure Zustand"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_icon = "mdi:heart-pulse"
+
+    def __init__(self, coordinator: ZendureCoordinator) -> None:
+        super().__init__(coordinator, "zendure_health")
+
+    @property
+    def native_value(self) -> str:
+        if not self.coordinator.last_update_success:
+            return "Gerät nicht erreichbar"
+        status = self.coordinator.diagnostics.status
+        if status in {"Befehl ignoriert", "Recovery fehlgeschlagen", "Schreibfehler"}:
+            return "Fehler"
+        if status in {"100 % erreicht, keine Entladung", "Leistung begrenzt", "Recovery gesperrt"}:
+            return "Eingeschränkter Betrieb"
+        if status == "Recovery aktiv":
+            return "Recovery aktiv"
+        return "OK"
+
+    @property
+    def available(self) -> bool:
+        return True
+
+
+class ZendureCommandSensor(ZendureDeviceEntity, SensorEntity):
+    """Last command result with timestamps and unmodified values."""
+
+    _attr_name = "Letzter Steuerbefehl"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_icon = "mdi:code-json"
+
+    def __init__(self, coordinator: ZendureCoordinator) -> None:
+        super().__init__(coordinator, "last_command")
+
+    @property
+    def native_value(self) -> str:
+        d = self.coordinator.diagnostics
+        return d.last_command or "Noch kein Befehl"
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        d = self.coordinator.diagnostics
+        return {
+            "angeforderter_wert": d.last_requested_value,
+            "gesendeter_wert": d.last_sent_value,
+            "gemeldeter_wert": d.last_reported_value,
+            "erfolgreich": d.command_success,
+            "zeitpunkt": d.last_write_at.isoformat() if d.last_write_at else None,
+            "letzter_erfolg": d.last_success_at.isoformat() if d.last_success_at else None,
+            "letzte_recovery": d.last_recovery_at.isoformat() if d.last_recovery_at else None,
+        }
+
+    @property
+    def available(self) -> bool:
+        return True
