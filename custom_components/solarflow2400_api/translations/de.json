@@ -46,142 +46,142 @@
   },
   "entity": {
     "number": {
-      "outputLimit": {
+      "outputlimit": {
         "name": "Ausgangsleistung begrenzen"
       },
-      "inputLimit": {
+      "inputlimit": {
         "name": "AC-Ladeleistung begrenzen"
       },
-      "inverseMaxPower": {
+      "inversemaxpower": {
         "name": "Maximale Wechselrichterleistung"
       },
-      "socSet": {
+      "socset": {
         "name": "Oberen Batterieladestand festlegen"
       },
-      "minSoc": {
+      "minsoc": {
         "name": "Unteren Batterieladestand festlegen"
       },
-      "batCalTime": {
+      "batcaltime": {
         "name": "Batterie-Kalibrierzeit"
       }
     },
     "select": {
-      "acMode": {
+      "acmode": {
         "name": "AC-Betriebsart"
       },
-      "gridReverse": {
+      "gridreverse": {
         "name": "Rückspeisungsmodus"
       },
-      "gridOffMode": {
+      "gridoffmode": {
         "name": "Inselbetriebsmodus"
       },
-      "gridStandard": {
+      "gridstandard": {
         "name": "Netzstandard"
       },
-      "Fanspeed": {
+      "fanspeed": {
         "name": "Lüfterstufe"
       }
     },
     "switch": {
-      "smartMode": {
+      "smartmode": {
         "name": "Flash-Speicherung unterdrücken (smartMode)"
       },
-      "Fanmode": {
+      "fanmode": {
         "name": "Lüfter aktivieren"
       }
     },
     "sensor": {
-      "packInputPower": {
+      "packinputpower": {
         "name": "Batterie-Entladeleistung"
       },
-      "outputPackPower": {
+      "outputpackpower": {
         "name": "Batterie-Ladeleistung"
       },
-      "outputHomePower": {
+      "outputhomepower": {
         "name": "Ausgangsleistung zum Haus"
       },
-      "gridInputPower": {
+      "gridinputpower": {
         "name": "AC-Eingangsleistung"
       },
-      "solarInputPower": {
+      "solarinputpower": {
         "name": "PV-Gesamtleistung"
       },
-      "gridOffPower": {
+      "gridoffpower": {
         "name": "Leistung am Insel-Ausgang"
       },
-      "electricLevel": {
+      "electriclevel": {
         "name": "Gesamter Batterieladestand"
       },
-      "hyperTmp": {
+      "hypertmp": {
         "name": "Gerätetemperatur"
       },
-      "remainOutTime": {
+      "remainouttime": {
         "name": "Verbleibende Entladezeit"
       },
-      "BatVolt": {
+      "batvolt": {
         "name": "Batteriespannung am Hauptgerät"
       },
-      "FMVolt": {
+      "fmvolt": {
         "name": "Aktivierungsspannung"
       },
-      "chargeMaxLimit": {
+      "chargemaxlimit": {
         "name": "Gemeldete maximale Ladeleistung"
       },
       "rssi": {
         "name": "WLAN-Signalstärke"
       },
-      "packNum": {
+      "packnum": {
         "name": "Gemeldete Batterieanzahl"
       },
-      "packState": {
+      "packstate": {
         "name": "Batteriestatus (Rohwert)"
       },
-      "dcStatus": {
+      "dcstatus": {
         "name": "DC-Status (Rohwert)"
       },
-      "acStatus": {
+      "acstatus": {
         "name": "AC-Status (Rohwert)"
       },
-      "socLimit": {
+      "soclimit": {
         "name": "Ladestandsbegrenzung (Rohwert)"
       },
-      "faultLevel": {
+      "faultlevel": {
         "name": "Fehlerschwere (Rohwert)"
       },
-      "fanSpeed": {
+      "fanspeed": {
         "name": "Gemeldete Lüfterstufe"
       },
-      "socLevel": {
+      "soclevel": {
         "name": "Batterieladestand"
       },
       "power": {
         "name": "Batterieleistung"
       },
-      "packType": {
+      "packtype": {
         "name": "Batterietyp (Rohwert)"
       },
-      "heatState": {
+      "heatstate": {
         "name": "Batterieheizung (Rohwert)"
       },
       "state": {
         "name": "Batteriestatus (Rohwert)"
       },
-      "softVersion": {
+      "softversion": {
         "name": "Batterie-Firmware (Rohwert)"
       },
       "batcur": {
         "name": "Batteriestrom"
       },
-      "totalVol": {
+      "totalvol": {
         "name": "Batteriespannung"
       },
-      "maxVol": {
+      "maxvol": {
         "name": "Höchste Zellspannung"
       },
-      "minVol": {
+      "minvol": {
         "name": "Niedrigste Zellspannung"
       },
-      "maxTemp": {
+      "maxtemp": {
         "name": "Höchste Zelltemperatur"
       },
       "api_write_count": {
@@ -196,22 +196,22 @@
       "recovery_write_count": {
         "name": "Recovery-Schreibversuche"
       },
-      "solarPower1": {
+      "solarpower1": {
         "name": "PV-Leistung Eingang 1"
       },
-      "solarPower2": {
+      "solarpower2": {
         "name": "PV-Leistung Eingang 2"
       },
-      "solarPower3": {
+      "solarpower3": {
         "name": "PV-Leistung Eingang 3"
       },
-      "solarPower4": {
+      "solarpower4": {
         "name": "PV-Leistung Eingang 4"
       },
-      "solarPower5": {
+      "solarpower5": {
         "name": "PV-Leistung Eingang 5"
       },
-      "solarPower6": {
+      "solarpower6": {
         "name": "PV-Leistung Eingang 6"
       }
     },
@@ -219,34 +219,34 @@
       "is_error": {
         "name": "Gerätefehler"
       },
-      "gridState": {
+      "gridstate": {
         "name": "Netzverbindung der SolarFlow"
       },
-      "heatState": {
+      "heatstate": {
         "name": "Batterieheizung aktiv"
       },
-      "pvStatus": {
+      "pvstatus": {
         "name": "PV aktiv"
       },
       "pass": {
         "name": "Durchleitung aktiv"
       },
-      "reverseState": {
+      "reversestate": {
         "name": "Rückflussstatus"
       },
-      "socStatus": {
+      "socstatus": {
         "name": "Batteriekalibrierung aktiv"
       },
-      "dataReady": {
+      "dataready": {
         "name": "Gerätedaten bereit"
       },
-      "lampSwitch": {
+      "lampswitch": {
         "name": "Statusleuchte aktiv"
       },
-      "fanSwitch": {
+      "fanswitch": {
         "name": "Lüfterstatus"
       },
-      "dryNodeState": {
+      "drynodestate": {
         "name": "Trockenkontakt (Rohflag)"
       }
     }

@@ -9,6 +9,7 @@ from __future__ import annotations
 import ast
 import importlib.util
 import json
+import re
 import sys
 from dataclasses import dataclass, field
 from types import SimpleNamespace
@@ -338,6 +339,14 @@ class ApiContractTests(shared.IntegrationTestCase):
 
         self.assertEqual(keys(documents[0]), keys(documents[1]))
         self.assertEqual(keys(documents[0]), keys(documents[2]))
+        for document in documents:
+            for platform in document["entity"].values():
+                self.assertTrue(
+                    all(
+                        re.fullmatch(r"[a-z0-9]+(?:[_-][a-z0-9]+)*", key)
+                        for key in platform
+                    )
+                )
 
 
 class Response:

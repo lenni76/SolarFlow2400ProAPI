@@ -72,8 +72,12 @@ async def test_real_setup_links_internal_battery_and_unloads(hass, simulated_api
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
     registry = dr.async_get(hass)
-    parent = registry.async_get_device(identifiers={(DOMAIN, "HUB-TEST")})
-    battery = registry.async_get_device(identifiers={(DOMAIN, "PACK-TEST")})
+    parent = registry.async_get_device_by_identifier(
+        (DOMAIN, "HUB-TEST"), config_entry_id=entry.entry_id
+    )
+    battery = registry.async_get_device_by_identifier(
+        (DOMAIN, "PACK-TEST"), config_entry_id=entry.entry_id
+    )
     assert parent is not None and battery is not None
     assert battery.via_device_id == parent.id
     entities = er.async_entries_for_config_entry(er.async_get(hass), entry.entry_id)
@@ -98,13 +102,35 @@ async def test_existing_device_identity_and_user_names_survive_setup(
         via_device_id=parent.id,
     )
     registry.async_update_device(parent.id, name_by_user="Mein Speicher")
+    entities = er.async_get(hass)
+    old_output = entities.async_get_or_create(
+        "number",
+        DOMAIN,
+        "HUB-TEST_outputLimit",
+        config_entry=entry,
+        device_id=parent.id,
+        suggested_object_id="bisheriges_ausgangslimit",
+        original_name="outputLimit",
+    )
+    entities.async_update_entity(old_output.entity_id, name="Meine Leistungsgrenze")
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
-    assert registry.async_get_device(identifiers={(DOMAIN, "HUB-TEST")}).id == parent.id
     assert (
-        registry.async_get_device(identifiers={(DOMAIN, "PACK-TEST")}).id == battery.id
+        registry.async_get_device_by_identifier(
+            (DOMAIN, "HUB-TEST"), config_entry_id=entry.entry_id
+        ).id
+        == parent.id
+    )
+    assert (
+        registry.async_get_device_by_identifier(
+            (DOMAIN, "PACK-TEST"), config_entry_id=entry.entry_id
+        ).id
+        == battery.id
     )
     assert registry.async_get(parent.id).name_by_user == "Mein Speicher"
+    after = entity_for(hass, entry, "HUB-TEST_outputLimit")
+    assert after.entity_id == old_output.entity_id
+    assert after.name == "Meine Leistungsgrenze"
 
 
 async def test_real_number_service_confirms_write_and_shows_reported_bounds(

@@ -95,7 +95,7 @@ class ZendureBinarySensor(ZendureDeviceEntity, BinarySensorEntity):
         """Initialize the binary sensor."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
-        self._attr_translation_key = description.key
+        self._attr_translation_key = description.key.lower()
 
     @property
     def is_on(self) -> bool | None:

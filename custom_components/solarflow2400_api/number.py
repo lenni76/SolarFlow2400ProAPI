@@ -125,7 +125,7 @@ class ZendureNumber(ZendureDeviceEntity, NumberEntity):
         """Initialize the number entity."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
-        self._attr_translation_key = description.key
+        self._attr_translation_key = description.key.lower()
 
     @property
     def native_max_value(self) -> float:

@@ -71,7 +71,7 @@ class ZendureSwitch(ZendureDeviceEntity, SwitchEntity):
         """Initialize the switch."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
-        self._attr_translation_key = description.key
+        self._attr_translation_key = description.key.lower()
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:

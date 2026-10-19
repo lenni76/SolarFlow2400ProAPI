@@ -108,7 +108,7 @@ class ZendureSelect(ZendureDeviceEntity, SelectEntity):
         """Initialize the select entity."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
-        self._attr_translation_key = description.key
+        self._attr_translation_key = description.key.lower()
         self._attr_options = list(description.value_map)
         self._label_by_value = {v: k for k, v in description.value_map.items()}
 
