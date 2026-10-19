@@ -33,8 +33,221 @@
           "command_validation": "Validate written commands",
           "validation_delay": "Validation delay (seconds)",
           "auto_recovery": "Automatic one-time recovery",
-          "recovery_cooldown": "Recovery cooldown (seconds)"
+          "recovery_cooldown": "Recovery cooldown (seconds)",
+          "skip_unchanged": "Skip identical recently confirmed settings"
+        },
+        "data_description": {
+          "skip_unchanged": "Skip identical settings only when confirmed by a report at most five seconds old. Always send zero-power commands. No added delay for changed values.",
+          "command_validation": "Checks the reported device setting, not actual output power. Without validation, successful application is not confirmed.",
+          "auto_recovery": "Off by default. Only during discharge with reported reverse-flow prohibition and a nonzero output request. Briefly switches to charge and verifies restoration. Does not guarantee zero export."
         }
+      }
+    }
+  },
+  "entity": {
+    "number": {
+      "outputLimit": {
+        "name": "Output power limit"
+      },
+      "inputLimit": {
+        "name": "AC charge power limit"
+      },
+      "inverseMaxPower": {
+        "name": "Maximum inverter power"
+      },
+      "socSet": {
+        "name": "Maximum battery state of charge"
+      },
+      "minSoc": {
+        "name": "Minimum battery state of charge"
+      },
+      "batCalTime": {
+        "name": "Battery calibration time"
+      }
+    },
+    "select": {
+      "acMode": {
+        "name": "AC operating mode"
+      },
+      "gridReverse": {
+        "name": "Reverse flow mode"
+      },
+      "gridOffMode": {
+        "name": "Off-grid mode"
+      },
+      "gridStandard": {
+        "name": "Grid standard"
+      },
+      "Fanspeed": {
+        "name": "Fan speed"
+      }
+    },
+    "switch": {
+      "smartMode": {
+        "name": "Suppress flash persistence (smartMode)"
+      },
+      "Fanmode": {
+        "name": "Enable fan"
+      }
+    },
+    "sensor": {
+      "packInputPower": {
+        "name": "Battery discharge power"
+      },
+      "outputPackPower": {
+        "name": "Battery charge power"
+      },
+      "outputHomePower": {
+        "name": "Output power to home"
+      },
+      "gridInputPower": {
+        "name": "AC input power"
+      },
+      "solarInputPower": {
+        "name": "Total PV power"
+      },
+      "gridOffPower": {
+        "name": "Off-grid output power"
+      },
+      "electricLevel": {
+        "name": "Overall battery state of charge"
+      },
+      "hyperTmp": {
+        "name": "Device temperature"
+      },
+      "remainOutTime": {
+        "name": "Remaining discharge time"
+      },
+      "BatVolt": {
+        "name": "Hub battery voltage"
+      },
+      "FMVolt": {
+        "name": "Activation voltage"
+      },
+      "chargeMaxLimit": {
+        "name": "Reported maximum charge power"
+      },
+      "rssi": {
+        "name": "Wi-Fi signal strength"
+      },
+      "packNum": {
+        "name": "Reported battery count"
+      },
+      "packState": {
+        "name": "Battery status (raw)"
+      },
+      "dcStatus": {
+        "name": "DC status (raw)"
+      },
+      "acStatus": {
+        "name": "AC status (raw)"
+      },
+      "socLimit": {
+        "name": "State of charge limit (raw)"
+      },
+      "faultLevel": {
+        "name": "Fault severity (raw)"
+      },
+      "fanSpeed": {
+        "name": "Reported fan speed"
+      },
+      "socLevel": {
+        "name": "Battery state of charge"
+      },
+      "power": {
+        "name": "Battery power"
+      },
+      "packType": {
+        "name": "Battery type (raw)"
+      },
+      "heatState": {
+        "name": "Battery heating (raw)"
+      },
+      "state": {
+        "name": "Battery status (raw)"
+      },
+      "softVersion": {
+        "name": "Battery firmware (raw)"
+      },
+      "batcur": {
+        "name": "Battery current"
+      },
+      "totalVol": {
+        "name": "Battery voltage"
+      },
+      "maxVol": {
+        "name": "Maximum cell voltage"
+      },
+      "minVol": {
+        "name": "Minimum cell voltage"
+      },
+      "maxTemp": {
+        "name": "Maximum cell temperature"
+      },
+      "api_write_count": {
+        "name": "API write attempts"
+      },
+      "skipped_write_count": {
+        "name": "Skipped duplicate commands"
+      },
+      "retry_write_count": {
+        "name": "Command retries"
+      },
+      "recovery_write_count": {
+        "name": "Recovery write attempts"
+      },
+      "solarPower1": {
+        "name": "PV input 1 power"
+      },
+      "solarPower2": {
+        "name": "PV input 2 power"
+      },
+      "solarPower3": {
+        "name": "PV input 3 power"
+      },
+      "solarPower4": {
+        "name": "PV input 4 power"
+      },
+      "solarPower5": {
+        "name": "PV input 5 power"
+      },
+      "solarPower6": {
+        "name": "PV input 6 power"
+      }
+    },
+    "binary_sensor": {
+      "is_error": {
+        "name": "Device error"
+      },
+      "gridState": {
+        "name": "SolarFlow grid connection"
+      },
+      "heatState": {
+        "name": "Battery heating active"
+      },
+      "pvStatus": {
+        "name": "PV active"
+      },
+      "pass": {
+        "name": "Pass-through active"
+      },
+      "reverseState": {
+        "name": "Reverse flow status"
+      },
+      "socStatus": {
+        "name": "Battery calibration active"
+      },
+      "dataReady": {
+        "name": "Device data ready"
+      },
+      "lampSwitch": {
+        "name": "Status light active"
+      },
+      "fanSwitch": {
+        "name": "Fan status"
+      },
+      "dryNodeState": {
+        "name": "Dry contact (raw flag)"
       }
     }
   }

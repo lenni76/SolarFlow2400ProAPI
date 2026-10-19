@@ -71,6 +71,20 @@ class ZendureSwitch(ZendureDeviceEntity, SwitchEntity):
         """Initialize the switch."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
+        self._attr_translation_key = description.key
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Explain flash persistence without changing the device's switch value."""
+        if self._key != "smartMode":
+            return None
+        return {
+            "flash_speicherung_unterdrueckt": self.is_on,
+            "hinweis": (
+                "Ein: Änderungen nicht dauerhaft speichern; nach Geräte-Neustart "
+                "gelten die zuvor gespeicherten Einstellungen."
+            ),
+        }
 
     @property
     def is_on(self) -> bool | None:

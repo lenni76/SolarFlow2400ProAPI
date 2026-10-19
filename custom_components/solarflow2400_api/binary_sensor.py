@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
@@ -57,8 +56,13 @@ BINARY_SENSORS: tuple[ZendureBinarySensorEntityDescription, ...] = (
             key=key, name=key, entity_category=EntityCategory.DIAGNOSTIC
         )
         for key in (
-            "pass", "reverseState", "socStatus", "dataReady", "lampSwitch",
-            "fanSwitch", "dryNodeState",
+            "pass",
+            "reverseState",
+            "socStatus",
+            "dataReady",
+            "lampSwitch",
+            "fanSwitch",
+            "dryNodeState",
         )
     ),
 )
@@ -91,6 +95,7 @@ class ZendureBinarySensor(ZendureDeviceEntity, BinarySensorEntity):
         """Initialize the binary sensor."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
+        self._attr_translation_key = description.key
 
     @property
     def is_on(self) -> bool | None:

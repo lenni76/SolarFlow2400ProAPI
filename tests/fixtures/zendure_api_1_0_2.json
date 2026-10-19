@@ -1,0 +1,141 @@
+{
+  "sdk_commit": "9b683892e84b8ffeb905ed52c066ea9b3ebc42c8",
+  "openapi_document_version": "1.0.2",
+  "device_report_keys": [
+    "heatState",
+    "packInputPower",
+    "outputPackPower",
+    "outputHomePower",
+    "remainOutTime",
+    "packState",
+    "packNum",
+    "electricLevel",
+    "gridInputPower",
+    "solarInputPower",
+    "solarPower1",
+    "solarPower2",
+    "solarPower3",
+    "solarPower4",
+    "solarPower5",
+    "solarPower6",
+    "pass",
+    "reverseState",
+    "socStatus",
+    "hyperTmp",
+    "dcStatus",
+    "pvStatus",
+    "acStatus",
+    "dataReady",
+    "gridState",
+    "BatVolt",
+    "FMVolt",
+    "socLimit",
+    "rssi",
+    "gridOffPower",
+    "lampSwitch",
+    "gridOffMode",
+    "IOTState",
+    "fanSwitch",
+    "fanSpeed",
+    "faultLevel",
+    "bindstate",
+    "VoltWakeup",
+    "OldMode",
+    "OTAState",
+    "LCNState",
+    "factoryModeState",
+    "timestamp",
+    "ts",
+    "timeZone",
+    "tsZone",
+    "chargeMaxLimit",
+    "phaseSwitch",
+    "is_error",
+    "acCouplingState",
+    "dryNodeState"
+  ],
+  "pack_report_keys": [
+    "sn",
+    "packType",
+    "socLevel",
+    "state",
+    "power",
+    "maxTemp",
+    "totalVol",
+    "batcur",
+    "maxVol",
+    "minVol",
+    "softVersion",
+    "heatState"
+  ],
+  "write_keys": [
+    "acMode",
+    "inputLimit",
+    "outputLimit",
+    "socSet",
+    "minSoc",
+    "gridReverse",
+    "inverseMaxPower",
+    "gridStandard",
+    "smartMode",
+    "batCalTime",
+    "Fanmode",
+    "Fanspeed",
+    "gridOffMode"
+  ],
+  "write_ranges": {
+    "acMode": {
+      "minimum": 1,
+      "maximum": 2
+    },
+    "inputLimit": {},
+    "outputLimit": {},
+    "socSet": {
+      "minimum": 70,
+      "maximum": 100
+    },
+    "minSoc": {
+      "minimum": 0,
+      "maximum": 50
+    },
+    "gridReverse": {
+      "minimum": 0,
+      "maximum": 2
+    },
+    "inverseMaxPower": {},
+    "gridStandard": {
+      "minimum": 0,
+      "maximum": 9
+    },
+    "smartMode": {
+      "minimum": 0,
+      "maximum": 1
+    },
+    "batCalTime": {},
+    "Fanmode": {
+      "minimum": 0,
+      "maximum": 1
+    },
+    "Fanspeed": {
+      "minimum": 0,
+      "maximum": 2
+    },
+    "gridOffMode": {
+      "minimum": 0,
+      "maximum": 2
+    }
+  },
+  "paths": {
+    "/properties/report": [
+      "get"
+    ],
+    "/properties/write": [
+      "post"
+    ],
+    "/rpc": [
+      "get",
+      "post"
+    ]
+  },
+  "source_url": "https://github.com/Zendure/zenSDK/blob/9b683892e84b8ffeb905ed52c066ea9b3ebc42c8/docs/openapi.yaml"
+}

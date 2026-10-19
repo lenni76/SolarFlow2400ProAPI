@@ -1,7 +1,7 @@
 """Sensor platform for SolarFlow2400-API (read-only properties).
 
-Units, scaling and battery-pack fields come straight from the Zendure zenSDK
-property reference (docs/en_properties.md). Any property the device reports
+Units, scaling and battery-pack fields follow Zendure zenSDK OpenAPI 1.0.2 and
+the manufacturer's Zendure-HA integration (totalVol scaling). Any property reported
 that is *not* explicitly listed here is still exposed as a raw diagnostic
 sensor (disabled by default) so no data is lost - matching the reference
 Symcon script's "create a variable for every property" behaviour.
@@ -20,9 +20,9 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
-    EntityCategory,
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    EntityCategory,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
     UnitOfPower,
@@ -40,13 +40,33 @@ PARALLEL_UPDATES = 0
 # Keys handled by other platforms (writable controls / binary flags) so we do
 # not also expose them as raw fallback sensors.
 _WRITABLE_KEYS = {
-    "acMode", "inputLimit", "outputLimit", "socSet", "minSoc", "gridReverse",
-    "inverseMaxPower", "gridStandard", "smartMode", "batCalTime", "Fanmode",
-    "Fanspeed", "gridOffMode", "writeRsp",
+    "acMode",
+    "inputLimit",
+    "outputLimit",
+    "socSet",
+    "minSoc",
+    "gridReverse",
+    "inverseMaxPower",
+    "gridStandard",
+    "smartMode",
+    "batCalTime",
+    "Fanmode",
+    "Fanspeed",
+    "gridOffMode",
+    "writeRsp",
 }
 _BINARY_KEYS = {
-    "pass", "reverseState", "socStatus", "dataReady", "gridState", "is_error",
-    "heatState", "pvStatus", "lampSwitch", "fanSwitch", "dryNodeState",
+    "pass",
+    "reverseState",
+    "socStatus",
+    "dataReady",
+    "gridState",
+    "is_error",
+    "heatState",
+    "pvStatus",
+    "lampSwitch",
+    "fanSwitch",
+    "dryNodeState",
 }
 
 
@@ -67,10 +87,33 @@ def _kelvin_tenths_to_c(raw: Any) -> float | None:
         return None
 
 
+def _battery_current_to_a(raw: Any) -> float | None:
+    """Decode the documented signed int16 in tenths of an ampere.
+
+    Accept unsigned two's-complement values and already signed JSON integers.
+    The wire schema specifies an integer, not a byte array or fractional value.
+    """
+    try:
+        if isinstance(raw, bool):
+            return None
+        value = int(raw)
+        if float(raw) != value or not -32768 <= value <= 65535:
+            return None
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if value >= 32768:
+        value -= 65536
+    return value / 10.0
+
+
 # --- Device-level sensors (Device Data Properties, RO) ----------------------
 _POWER_KEYS = (
-    "packInputPower", "outputPackPower", "outputHomePower", "gridInputPower",
-    "solarInputPower", "gridOffPower",
+    "packInputPower",
+    "outputPackPower",
+    "outputHomePower",
+    "gridInputPower",
+    "solarInputPower",
+    "gridOffPower",
 )
 
 DEVICE_SENSORS: tuple[ZendureSensorEntityDescription, ...] = (
@@ -100,6 +143,17 @@ DEVICE_SENSORS: tuple[ZendureSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
+    ),
+    ZendureSensorEntityDescription(
+        # OpenAPI 1.0.2 specifies the same 0.1 K conversion as maxTemp.
+        key="hyperTmp",
+        name="hyperTmp",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=_kelvin_tenths_to_c,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     ZendureSensorEntityDescription(
         key="remainOutTime",
@@ -150,7 +204,11 @@ DEVICE_SENSORS: tuple[ZendureSensorEntityDescription, ...] = (
             key=key, name=key, entity_category=EntityCategory.DIAGNOSTIC
         )
         for key in (
-            "packState", "dcStatus", "acStatus", "socLimit", "faultLevel",
+            "packState",
+            "dcStatus",
+            "acStatus",
+            "socLimit",
+            "faultLevel",
             "fanSpeed",
         )
     ),
@@ -178,6 +236,10 @@ PACK_SENSORS: tuple[ZendureSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        # Zendure-HA's EntityDevice.createEntity uses factor 100 for totalVol;
+        # the OpenAPI unit label alone omits this wire scaling.
+        scale=0.01,
+        suggested_display_precision=2,
     ),
     ZendureSensorEntityDescription(
         key="maxVol",  # 0.01 V per doc
@@ -206,14 +268,13 @@ PACK_SENSORS: tuple[ZendureSensorEntityDescription, ...] = (
         value_fn=_kelvin_tenths_to_c,
     ),
     ZendureSensorEntityDescription(
-        # batcur: signed value, reported as A*10 per doc. Sign handling of the
-        # raw 16-bit two's-complement is done firmware-side in the JSON, so we
-        # only scale by 0.1. Disabled by default pending per-firmware review.
+        # Decode uint16 two's-complement before scaling, while also accepting
+        # already signed JSON values. Keep this diagnostic disabled by default.
         key="batcur",
         name="batcur",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
-        scale=0.1,
+        value_fn=_battery_current_to_a,
         suggested_display_precision=1,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
@@ -225,6 +286,19 @@ PACK_SENSORS: tuple[ZendureSensorEntityDescription, ...] = (
         key="softVersion",
         name="softVersion",
         entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    ZendureSensorEntityDescription(
+        key="packType",
+        name="packType",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    ZendureSensorEntityDescription(
+        # Documented 0/1 heating flag, preserved as a numeric diagnostic value.
+        key="heatState",
+        name="heatState",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
 )
 
@@ -242,6 +316,15 @@ async def async_setup_entry(
         ZendureStatusSensor(coordinator),
         ZendureHealthSensor(coordinator),
         ZendureCommandSensor(coordinator),
+        *(
+            ZendureCounterSensor(coordinator, key, attribute)
+            for key, attribute in (
+                ("api_write_count", "write_count"),
+                ("skipped_write_count", "skipped_write_count"),
+                ("retry_write_count", "total_retry_count"),
+                ("recovery_write_count", "recovery_write_count"),
+            )
+        ),
     ]
 
     # Known device sensors.
@@ -302,6 +385,7 @@ class ZendureDeviceSensor(ZendureDeviceEntity, SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
+        self._attr_translation_key = description.key
 
     @property
     def native_value(self) -> Any:
@@ -323,7 +407,7 @@ class ZendurePackSensor(ZendurePackEntity, SensorEntity):
         """Initialize the pack sensor."""
         super().__init__(coordinator, pack_sn, description.key)
         self.entity_description = description
-        self._attr_translation_key = None
+        self._attr_translation_key = description.key
 
     @property
     def native_value(self) -> Any:
@@ -357,13 +441,16 @@ class ZendureStatusSensor(ZendureDeviceEntity, SensorEntity):
 
     @property
     def native_value(self) -> str:
-        return self.coordinator.diagnostics.status
+        return self.coordinator.current_status
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         d = self.coordinator.diagnostics
         return {
             "letzter_befehl": d.last_command,
+            "befehl_status": d.status,
+            "letzter_fehler": d.last_error,
+            "ac_modus_unbestaetigt": d.recovery_restore_failed,
             "angeforderter_wert": d.last_requested_value,
             "gesendeter_wert": d.last_sent_value,
             "gemeldeter_wert": d.last_reported_value,
@@ -391,16 +478,12 @@ class ZendureHealthSensor(ZendureDeviceEntity, SensorEntity):
 
     @property
     def native_value(self) -> str:
-        if not self.coordinator.last_update_success:
-            return "Gerät nicht erreichbar"
-        status = self.coordinator.diagnostics.status
-        if status in {"Befehl ignoriert", "Recovery fehlgeschlagen", "Schreibfehler"}:
+        status = self.coordinator.current_status
+        if status == "Gerätefehler":
             return "Fehler"
-        if status in {"100 % erreicht, keine Entladung", "Leistung begrenzt", "Recovery gesperrt"}:
+        if status == "Hoher Ladestand, geringe Ausgabe":
             return "Eingeschränkter Betrieb"
-        if status == "Recovery aktiv":
-            return "Recovery aktiv"
-        return "OK"
+        return "OK" if status == "Normal" else status
 
     @property
     def available(self) -> bool:
@@ -427,13 +510,48 @@ class ZendureCommandSensor(ZendureDeviceEntity, SensorEntity):
         d = self.coordinator.diagnostics
         return {
             "angeforderter_wert": d.last_requested_value,
+            "status": d.status,
+            "letzter_fehler": d.last_error,
+            "ac_modus_unbestaetigt": d.recovery_restore_failed,
+            "wiederherzustellender_ac_modus": d.restore_mode,
+            "api_schreibversuche_seit_start": d.write_count,
+            "vermiedene_schreibversuche_seit_start": d.skipped_write_count,
+            "wiederholungen_seit_start": d.total_retry_count,
+            "recovery_schreibversuche_seit_start": d.recovery_write_count,
             "gesendeter_wert": d.last_sent_value,
             "gemeldeter_wert": d.last_reported_value,
             "erfolgreich": d.command_success,
             "zeitpunkt": d.last_write_at.isoformat() if d.last_write_at else None,
-            "letzter_erfolg": d.last_success_at.isoformat() if d.last_success_at else None,
-            "letzte_recovery": d.last_recovery_at.isoformat() if d.last_recovery_at else None,
+            "letzter_erfolg": d.last_success_at.isoformat()
+            if d.last_success_at
+            else None,
+            "letzte_recovery": d.last_recovery_at.isoformat()
+            if d.last_recovery_at
+            else None,
         }
+
+    @property
+    def available(self) -> bool:
+        return True
+
+
+class ZendureCounterSensor(ZendureDeviceEntity, SensorEntity):
+    """Observed API attempts since integration setup, never physical flash counts."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_icon = "mdi:counter"
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+
+    def __init__(
+        self, coordinator: ZendureCoordinator, key: str, attribute: str
+    ) -> None:
+        super().__init__(coordinator, key)
+        self._attribute = attribute
+        self._attr_translation_key = key
+
+    @property
+    def native_value(self) -> int:
+        return getattr(self.coordinator.diagnostics, self._attribute)
 
     @property
     def available(self) -> bool:

@@ -1,0 +1,3 @@
+# Plugin generated against exactly Home Assistant Core 2026.10.2.
+homeassistant==2026.10.2
+pytest-homeassistant-custom-component==0.13.373

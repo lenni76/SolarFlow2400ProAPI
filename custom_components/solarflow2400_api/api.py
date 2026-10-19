@@ -51,7 +51,7 @@ class ZendureLocalApi:
                     # The device sets Content-Type inconsistently across firmware,
                     # so parse the body ourselves instead of trusting the header.
                     data = await resp.json(content_type=None)
-        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
+        except (TimeoutError, aiohttp.ClientError, ValueError) as err:
             raise ZendureApiError(
                 f"Error contacting {self._url(REPORT_PATH)}: {err}"
             ) from err
@@ -82,7 +82,7 @@ class ZendureLocalApi:
                 ) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
-        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
+        except (TimeoutError, aiohttp.ClientError, ValueError) as err:
             raise ZendureApiError(
                 f"Error writing {key}={value} to {self._url(WRITE_PATH)}: {err}"
             ) from err

@@ -1,20 +1,20 @@
 {
   "domain": "solarflow2400_api",
   "name": "SolarFlow2400-API",
-  "version": "1.2.0",
   "codeowners": [
     "@lenni76"
   ],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/lenni76/SolarFlow2400-API",
+  "documentation": "https://github.com/lenni76/SolarFlow2400ProAPI",
   "integration_type": "hub",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/lenni76/SolarFlow2400-API/issues",
+  "issue_tracker": "https://github.com/lenni76/SolarFlow2400ProAPI/issues",
   "loggers": [
     "custom_components.solarflow2400_api"
   ],
   "requirements": [],
+  "version": "1.2.1",
   "zeroconf": [
     "_zendure._tcp.local."
   ]

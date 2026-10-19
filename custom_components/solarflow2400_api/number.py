@@ -9,13 +9,14 @@ if your model differs (e.g. SolarFlow800 vs 2400 Pro).
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from homeassistant.components.number import (
     NumberEntity,
     NumberEntityDescription,
     NumberMode,
 )
-from homeassistant.const import EntityCategory, PERCENTAGE, UnitOfPower
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfPower
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -40,7 +41,7 @@ NUMBERS: tuple[ZendureNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.WATT,
         native_min_value=0,
         native_max_value=2400,
-        native_step=100,
+        native_step=1,
         mode=NumberMode.BOX,
     ),
     ZendureNumberEntityDescription(
@@ -49,7 +50,7 @@ NUMBERS: tuple[ZendureNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.WATT,
         native_min_value=0,
         native_max_value=2400,
-        native_step=100,
+        native_step=1,
         mode=NumberMode.BOX,
     ),
     ZendureNumberEntityDescription(
@@ -124,6 +125,24 @@ class ZendureNumber(ZendureDeviceEntity, NumberEntity):
         """Initialize the number entity."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
+        self._attr_translation_key = description.key
+
+    @property
+    def native_max_value(self) -> float:
+        """Show reported power limits in the UI, within this model's UI bound."""
+        upper = self.entity_description.native_max_value
+        limit_key = {
+            "outputLimit": "inverseMaxPower",
+            "inputLimit": "chargeMaxLimit",
+        }.get(self._key)
+        if limit_key and self.coordinator.data:
+            try:
+                reported = float(self.coordinator.data.device.get(limit_key))
+                if isfinite(reported) and reported > 0:
+                    return min(upper, reported)
+            except (TypeError, ValueError):
+                pass
+        return upper
 
     @property
     def native_value(self) -> float | None:

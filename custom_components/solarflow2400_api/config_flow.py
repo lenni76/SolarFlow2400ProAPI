@@ -6,7 +6,6 @@ import logging
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -26,11 +25,13 @@ from .const import (
     CONF_RECOVERY_COOLDOWN,
     CONF_SCAN_INTERVAL,
     CONF_SERIAL,
+    CONF_SKIP_UNCHANGED,
     CONF_VALIDATION_DELAY,
     DEFAULT_AUTO_RECOVERY,
     DEFAULT_COMMAND_VALIDATION,
     DEFAULT_RECOVERY_COOLDOWN,
     DEFAULT_SCAN_INTERVAL,
+    DEFAULT_SKIP_UNCHANGED,
     DEFAULT_VALIDATION_DELAY,
     DOMAIN,
     MAX_SCAN_INTERVAL,
@@ -58,6 +59,16 @@ def _model_from_zeroconf_name(name: str) -> str | None:
     if len(parts) >= 3 and parts[0].lower() == "zendure":
         return parts[1]
     return None
+
+
+def _host_from_zeroconf(discovery_info: ZeroconfServiceInfo) -> str:
+    """Keep the advertised HTTP port and bracket IPv6 address literals."""
+    host = discovery_info.host
+    if ":" in host and not host.startswith("["):
+        host = f"[{host}]"
+    if discovery_info.port not in (None, 80):
+        host = f"{host}:{discovery_info.port}"
+    return host
 
 
 class ZendureConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -95,7 +106,9 @@ class ZendureConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "no_serial"
             else:
                 await self.async_set_unique_id(serial)
-                self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+                self._abort_if_unique_id_configured(
+                    updates={CONF_HOST: host}, reload_on_update=False
+                )
                 return self.async_create_entry(
                     title=f"SolarFlow {serial}",
                     data={
@@ -115,7 +128,7 @@ class ZendureConfigFlow(ConfigFlow, domain=DOMAIN):
         self, discovery_info: ZeroconfServiceInfo
     ) -> ConfigFlowResult:
         """Handle discovery via mDNS/zeroconf (_zendure._tcp.local.)."""
-        host = discovery_info.host
+        host = _host_from_zeroconf(discovery_info)
         self._host = host
         self._model = _model_from_zeroconf_name(discovery_info.name)
 
@@ -127,7 +140,9 @@ class ZendureConfigFlow(ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="no_serial")
 
         await self.async_set_unique_id(serial)
-        self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+        self._abort_if_unique_id_configured(
+            updates={CONF_HOST: host}, reload_on_update=False
+        )
 
         self.context["title_placeholders"] = {
             "name": f"{self._model or 'SolarFlow'} {serial}"
@@ -191,6 +206,12 @@ class ZendureOptionsFlow(OptionsFlow):
                         vol.Coerce(int),
                         vol.Range(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL),
                     ),
+                    vol.Required(
+                        CONF_SKIP_UNCHANGED,
+                        default=self.config_entry.options.get(
+                            CONF_SKIP_UNCHANGED, DEFAULT_SKIP_UNCHANGED
+                        ),
+                    ): bool,
                     vol.Required(
                         CONF_COMMAND_VALIDATION,
                         default=self.config_entry.options.get(

@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.2.1 - 2026-10-19 (locally prepared, unpublished)
+
+- Align sensor decoding with zenSDK OpenAPI 1.0.2 (SDK commit 9b68389):
+  decode batcur as signed int16 / 10 A and convert hyperTmp from 0.1 K to °C.
+- Scale battery totalVol by 0.01 V, matching Zendure's own HA integration.
+  Existing history is not rescaled; remove any user-side /100 workaround on update.
+- Expose reported battery packType and heatState as disabled diagnostic sensors.
+- Honor the HTTP port advertised by Zeroconf and bracket IPv6 address literals.
+- Preserve SOC wire scaling and existing selection strings; document differences
+  between the OpenAPI schema and the manufacturer's Chinese property reference.
+- Replace the deprecated battery `via_device` identifier tuple with
+  `via_device_id`, resolved within the owning config entry.
+- Register the main device before platform setup so the lookup also works on
+  first installation and independently of platform setup order.
+- Preserve main and battery identifiers and all entity unique IDs.
+- Let the existing config-entry update listener handle host changes without a
+  second reload from the manual or Zeroconf config flow, avoiding the API
+  combination removed in Home Assistant 2026.12.
+- Set the minimum Home Assistant compatibility target to 2026.10.2.
+- Correct the documentation and issue-tracker URLs to the actual repository.
+- Skip exact recently confirmed duplicate settings with an option to disable it;
+  always send zero-power commands and add no rate limit or deadband.
+- Raise Home Assistant errors after failed readback/retry; publish final command
+  outcomes consistently and separate them from current device health.
+- Restore and verify the original AC mode during optional recovery, including
+  cancellation and ambiguous timeouts. Keep recovery off by default and restrict
+  it to nonzero output requests in discharge mode with reverse-flow prohibition.
+- Add separate counters for API attempts, skipped duplicates, retries and recovery.
+- Add German/English entity names, flash-persistence explanations, reported UI
+  power bounds and 1 W input/output steps while preserving unique IDs and options.
+- Add 68 isolated regression tests for device identity, setup order, config-flow
+  reload behavior and API compatibility, including an anonymized real report and
+  the actual aiohttp response decoder. No device requests are sent by these tests.
+
 ## 1.2.0
 
 - Dynamische Begrenzung von `outputLimit` und `inputLimit` anhand aktuell gemeldeter Gerätelimits.

@@ -1,9 +1,9 @@
 """Select platform for SolarFlow2400-API (writable enumerated properties).
 
 All value<->label mappings below are taken from the zenSDK property table.
-Where Zendure documents the exact meaning of each integer (gridStandard,
-gridOffMode) those labels are used verbatim. Where only a range is given
-(gridReverse) the raw integers are shown as options.
+Existing labels are preserved for automation compatibility. The Chinese zenSDK
+reference also explains gridReverse (0 disabled / 1 allow / 2 prohibit reverse
+flow); its options remain raw integers as in previous releases.
 """
 
 from __future__ import annotations
@@ -32,14 +32,13 @@ class ZendureSelectEntityDescription(SelectEntityDescription):
 SELECTS: tuple[ZendureSelectEntityDescription, ...] = (
     ZendureSelectEntityDescription(
         # acMode RW, range 1-2, "Charge or discharge mode" (zenSDK).
-        # Zendure documents the range and direction but not per-value labels
-        # beyond "charge or discharge"; the raw value stays visible in each label.
+        # OpenAPI 1.0.2 explicitly confirms 1 charge / 2 discharge.
         key="acMode",
         name="acMode",
         value_map={"1 (charge)": 1, "2 (discharge)": 2},
     ),
     ZendureSelectEntityDescription(
-        # gridReverse RW, range 0-2, no per-value labels documented.
+        # Preserve existing option strings; zh_properties.md explains meanings.
         key="gridReverse",
         name="gridReverse",
         value_map={"0": 0, "1": 1, "2": 2},
@@ -109,6 +108,7 @@ class ZendureSelect(ZendureDeviceEntity, SelectEntity):
         """Initialize the select entity."""
         super().__init__(coordinator, description.key)
         self.entity_description = description
+        self._attr_translation_key = description.key
         self._attr_options = list(description.value_map)
         self._label_by_value = {v: k for k, v in description.value_map.items()}
 

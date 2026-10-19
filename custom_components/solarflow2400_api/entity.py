@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import (
+    DeviceInfo,
+    async_get_device_id_by_identifier,
+)
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, MANUFACTURER
@@ -50,9 +53,7 @@ class ZendurePackEntity(CoordinatorEntity[ZendureCoordinator]):
 
     _attr_has_entity_name = True
 
-    def __init__(
-        self, coordinator: ZendureCoordinator, pack_sn: str, key: str
-    ) -> None:
+    def __init__(self, coordinator: ZendureCoordinator, pack_sn: str, key: str) -> None:
         """Initialize with the pack serial and property key."""
         super().__init__(coordinator)
         self._pack_sn = pack_sn
@@ -68,7 +69,11 @@ class ZendurePackEntity(CoordinatorEntity[ZendureCoordinator]):
             model="SolarFlow Battery Pack",
             name=f"Zendure Battery {self._pack_sn}",
             serial_number=self._pack_sn,
-            via_device=(DOMAIN, self.coordinator.serial),
+            via_device_id=async_get_device_id_by_identifier(
+                self.coordinator.hass,
+                (DOMAIN, self.coordinator.serial),
+                config_entry_id=self.coordinator.config_entry.entry_id,
+            ),
         )
 
     @property
@@ -79,7 +84,6 @@ class ZendurePackEntity(CoordinatorEntity[ZendureCoordinator]):
     @property
     def available(self) -> bool:
         """Available only when the pack reported this key on the last poll."""
-        return (
-            super().available
-            and self._key in self.coordinator.data.packs.get(self._pack_sn, {})
+        return super().available and self._key in self.coordinator.data.packs.get(
+            self._pack_sn, {}
         )

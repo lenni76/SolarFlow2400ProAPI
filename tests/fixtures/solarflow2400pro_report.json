@@ -1,0 +1,30 @@
+{
+  "timestamp": 1792390441,
+  "messageId": 82,
+  "sn": "HUB-TEST",
+  "version": 3,
+  "product": "solarFlow2400Pro",
+  "properties": {
+    "heatState": 0, "packInputPower": 0, "outputPackPower": 0,
+    "outputHomePower": 0, "remainOutTime": 1050, "packState": 2,
+    "electricLevel": 7, "gridInputPower": 0, "solarInputPower": 0,
+    "solarPower1": 0, "solarPower2": 0, "solarPower3": 0, "solarPower4": 0,
+    "pass": 0, "reverseState": 0, "socStatus": 0, "hyperTmp": 2971,
+    "gridOffPower": 0, "dcStatus": 1, "pvStatus": 0, "acStatus": 1,
+    "dataReady": 1, "gridState": 1, "BatVolt": 4777, "socLimit": 0,
+    "faultLevel": 0, "acCouplingState": 57346, "offGridState": 0,
+    "dryNodeState": 1, "writeRsp": 0, "acMode": 2, "inputLimit": 0,
+    "outputLimit": 0, "socSet": 990, "minSoc": 60, "gridStandard": 0,
+    "gridReverse": 2, "inverseMaxPower": 1000, "lampSwitch": 1,
+    "gridOffMode": 0, "IOTState": 2, "Fanmode": 1, "Fanspeed": 0,
+    "bindstate": 0, "factoryModeState": 0, "OTAState": 0, "oldMode": 0,
+    "VoltWakeup": 0, "ts": 1792389587, "tsZone": 14, "smartMode": 1,
+    "chargeMaxLimit": 2400, "phaseSwitch": 1, "batCalTime": 60,
+    "socCompSwitch": 0, "packNum": 1, "rssi": -69, "is_error": 0
+  },
+  "packData": [{
+    "sn": "PACK-TEST", "packType": 500, "socLevel": 7, "state": 2,
+    "power": 9, "maxTemp": 2901, "totalVol": 4780, "batcur": 65534,
+    "maxVol": 319, "minVol": 316, "softVersion": 4355
+  }]
+}

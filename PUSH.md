@@ -1,21 +1,11 @@
-# Publishing checklist
+# Veröffentlichung
 
-## Before the first push
+Repository: https://github.com/lenni76/SolarFlow2400ProAPI
 
-- Create the public GitHub repository as `lenni76/SolarFlow2400-API`.
-- Set the repository description, for example:
-  `Local Home Assistant integration for Zendure SolarFlow 2400 via the zenSDK API.`
-- Add repository topics:
-  `home-assistant`, `hacs`, `solarflow`, `zendure`, `solar-energy`, `battery-storage`.
-- Confirm that the default branch is `main`.
+Der Workflow `validate-release.yml` prüft isolierte Tests, echten Home Assistant,
+hassfest und HACS. Erst nach erfolgreicher Prüfung veröffentlicht er 1.2.1 am
+exakt geprüften Commit. Der unveränderte Ausgangsstand 1.2.0 wird separat erhalten.
+Tags und bestehende Releases werden nicht auf andere Commits verschoben.
 
-## Before every release
-
-- Update the version in `custom_components/solarflow2400_api/manifest.json`.
-- Update `CHANGELOG.md` and move completed entries out of `Unreleased`.
-- Run `ruff check .`.
-- Run `ruff format --check .`.
-- Push and verify that HACS, hassfest, and Ruff workflows pass.
-- Create a GitHub release whose tag matches the manifest version, for example `v1.1.1`.
-- Add release notes or use GitHub's generated release notes.
-- Test installation or update through HACS.
+Der vorbereitete Rückrollstand 1.2.2 enthält den Anwendungscode von 1.2.0. Er
+wird erst bei Bedarf veröffentlicht. Details: [Update und Rückkehr](docs/HACS-UPDATE-UND-ROLLBACK.md).

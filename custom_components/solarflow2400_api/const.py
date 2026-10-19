@@ -33,6 +33,7 @@ CONF_COMMAND_VALIDATION = "command_validation"
 CONF_AUTO_RECOVERY = "auto_recovery"
 CONF_VALIDATION_DELAY = "validation_delay"
 CONF_RECOVERY_COOLDOWN = "recovery_cooldown"
+CONF_SKIP_UNCHANGED = "skip_unchanged"
 
 # zenSDK does not mandate a poll rate. The reference Symcon script used 10 s.
 # We default to 30 s to be gentle on the device and make it user-configurable.
@@ -41,6 +42,9 @@ DEFAULT_COMMAND_VALIDATION = True
 DEFAULT_AUTO_RECOVERY = False
 DEFAULT_VALIDATION_DELAY = 2
 DEFAULT_RECOVERY_COOLDOWN = 300
+DEFAULT_SKIP_UNCHANGED = True
+# Local cache policy, not a manufacturer API limit. Never throttle changed values.
+DUPLICATE_MAX_AGE = 5
 MIN_SCAN_INTERVAL = 5
 MAX_SCAN_INTERVAL = 3600
 
